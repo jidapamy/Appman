@@ -105,13 +105,13 @@ showhappy = (length) =>{
                 <Card.Header>{card.name}</Card.Header>
                 <Card.Meta>
                   <span className='date'>HP : 
-                   <Progress percent={hp} inverted progress color='orange' style={{ margin: 0 }} />
+                   <Progress percent={hp} progress color='orange' style={{ margin: 0 }} />
                   </span><br />
                   <span className='date'>WEAK : 
-                  <Progress percent={weak} inverted progress color='orange' style={{ margin: 0 }} />
+                  <Progress percent={weak} progress color='orange' style={{ margin: 0 }} />
                   </span><br />
                   <span className='date'>STR : 
-                   <Progress percent={weak} inverted progress color='orange' style={{ margin: 0 }} />
+                   <Progress percent={weak} progress color='orange' style={{ margin: 0 }} />
                   </span><br />
                   <span className='date'>Happiness : {happy}</span><br/>
                   <br />
@@ -127,11 +127,11 @@ showhappy = (length) =>{
                 <Button fluid
                   onClick={() => {
                     this.state.myCards.push(card)
-                    this.state.cards[i].hide = true
-                    // arr.splice(i, 1)
-                    // if (this.state.cards.indexOf(card) != -1){
-                    //   this.state.cards.splice(this.state.cards.indexOf(card), 1)
-                    // }
+                    // this.state.cards[i].hide = true
+                    arr.splice(i, 1)
+                    if (this.state.cards.indexOf(card) != -1){
+                      this.state.cards.splice(this.state.cards.indexOf(card), 1)
+                    }
                     this.setState({ myCards: this.state.myCards, [arr]: this.state[arr], cards: this.state.cards })
                   }}
                 >
@@ -151,7 +151,7 @@ showhappy = (length) =>{
     let tmp = ''
     if (this.state.myCards.length > 0) {
       tmp = this.state.myCards.map((card, i) => {
-        return <Card>
+        return <Card className="cardPoke">
           <Image src={card.imageUrl} />
           <Card.Content>
             <Card.Header>{card.name}</Card.Header>
@@ -164,8 +164,8 @@ showhappy = (length) =>{
             <Button fluid
               onClick={() => {
                 this.state.myCards.splice(i, 1)
-                this.state.cards[i].hide = false
-                // this.state.cards.push(card)
+                // this.state.cards[i].hide = false
+                this.state.cards.push(card)
                 this.setState({ myCards: this.state.myCards, cards: this.state.cards })
               }}
             >
@@ -183,9 +183,6 @@ showhappy = (length) =>{
   search = (input) => {
     if (input.length > 0) {
       // let filter = axios.get(`http://localhost:3030/api/cards?limit=30&name=${}&type={3}`)
-
-
-
       let filteredCards = this.state.cards.filter(card => 
         (card.name.toLowerCase().indexOf(input.toLowerCase()) != -1) || 
         (card.type.toLowerCase().indexOf(input.toLowerCase()) != -1)
@@ -209,8 +206,10 @@ showhappy = (length) =>{
       <div className="App">
         <div className="inBlock">
           <Button
+            size='massive'
             fluid
             onClick={() => this.setState({ showModal: true })}
+            style={{ background: COLORS.Fire, color : "FFF"}}
           // onClick={() => this.setState({ showModal: true })} 
           >
             Add
@@ -228,6 +227,7 @@ showhappy = (length) =>{
                 <Form>
                   <Form.Field>
                     <Input
+                      style={{ fontSize: '25px'}}
                       icon={<Icon name='search' inverted circular link />}
                       placeholder='Search...'
                       onChange={(e, { value }) => this.search(value)}
