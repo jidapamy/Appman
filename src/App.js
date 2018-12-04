@@ -77,20 +77,34 @@ showhappy = (length) =>{
       let tmp = ''
       if (arr.length > 0) {
         tmp = arr.map((card, i) => {
-          console.log(card)
           if (!card.hide) {
-            let hp = +card.hp
-            let damage = card.attacks ? card.attacks.length == 1 ? 50 : card.attacks.length == 2 ? 100 : 0 : 0
-            let weak = card.weaknesses?card.weaknesses.length == 1 ? 50 : card.weaknesses.length == 2 ? 100 : 0 :0
-            let happy = ((hp / 10) + (damage / 10) + 10 - (weak)) / 5
+            let hp = +card.hp < 100 ? +card.hp : 100
+            let damage = 0
+            if (card.attacks) {
+              card.attacks.map(card => {
+                debugger
+                card.damage.trim();
+                if (card.damage.indexOf('+') > 0 || card.damage.indexOf('×') > 0){
+                  card.damage = card.damage.replace('+','')
+                  card.damage = card.damage.replace('×', '')
+                }
+                damage += +card.damage
+              })
+            }
+            let str = card.attacks ? card.attacks.length == 1 ? 50 : card.attacks.length == 2 ? 100 : 0 : 0
+            let weak = card.weaknesses?card.weaknesses.length == 1 ? 100 : 0 :0
+            console.log("happy",`(${+card.hp }/ 10) + (${damage} / 10) + 10 - ${(card.weaknesses ? card.weaknesses.length : 0)}) / 5 = 
+            ${((+card.hp / 10) + (damage / 10) + 10 - (card.weaknesses ? card.weaknesses.length : 0)) / 5 }`)
+            let happy = parseInt(((hp / 10) + (damage / 10) + 10 - (card.weaknesses ? card.weaknesses.length : 0)) / 5)
             return <Card className="cardPoke"> 
               <Image src={card.imageUrl} />
               <Card.Content>
                 <Card.Header>{card.name}</Card.Header>
                 <Card.Meta>
                   <span className='date'>HP : {hp}</span><br />
-                  <span className='date'>WEAK : {weak}</span><br />
-                  <span className='date'>STR : {damage}</span><br />
+                  <span className='date'>WEAK : {weak}%</span><br />
+                  <span className='date'>STR : {str}%</span><br />
+                  <span className='date'>damage : {damage}</span><br />
                   <span className='date'>Happiness : {happy}</span><br/>
                   <Image className='happy' src={cute}/>
                   {/* {this.showhappy()} */}
@@ -125,7 +139,6 @@ showhappy = (length) =>{
     let tmp = ''
     if (this.state.myCards.length > 0) {
       tmp = this.state.myCards.map((card, i) => {
-        console.log(card)
         return <Card>
           <Image src={card.imageUrl} />
           <Card.Content>
@@ -179,6 +192,7 @@ showhappy = (length) =>{
 
 
   render() {
+    console.log("4/5", parseInt(5.2))
     return (
       <div className="App">
         <div className="inBlock">
