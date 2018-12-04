@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import axios from 'axios'
-import { Card, Form, Input, Icon, Button, Modal, Image, Header, Container } from 'semantic-ui-react'
+import { Card, Form, Input, Icon, Button, Modal, Image, Header, Container, Progress} from 'semantic-ui-react'
 import cute from "./cute.png"
 
 const COLORS = {
@@ -59,11 +59,16 @@ class App extends Component {
   }
 
 showhappy = (length) =>{
-  // let tmp = ""
-  // for (let i = 0; i > length ; i++){
-  //   tmp = <Image src={cute} />
-  // }
-  return <Image src={cute} />
+  console.log("showhappy")
+  let arr = []
+  let tmp = ''
+  for(let i = 0; i<length ;i++){
+    arr.push(i)
+  }
+  tmp = arr.map(i=>(
+   <Image className='happy' src={cute} />
+  ))
+  return tmp
 }
 
   showListCards = () => {
@@ -93,20 +98,27 @@ showhappy = (length) =>{
             }
             let str = card.attacks ? card.attacks.length == 1 ? 50 : card.attacks.length == 2 ? 100 : 0 : 0
             let weak = card.weaknesses?card.weaknesses.length == 1 ? 100 : 0 :0
-            console.log("happy",`(${+card.hp }/ 10) + (${damage} / 10) + 10 - ${(card.weaknesses ? card.weaknesses.length : 0)}) / 5 = 
-            ${((+card.hp / 10) + (damage / 10) + 10 - (card.weaknesses ? card.weaknesses.length : 0)) / 5 }`)
             let happy = parseInt(((hp / 10) + (damage / 10) + 10 - (card.weaknesses ? card.weaknesses.length : 0)) / 5)
             return <Card className="cardPoke"> 
               <Image src={card.imageUrl} />
               <Card.Content>
                 <Card.Header>{card.name}</Card.Header>
                 <Card.Meta>
-                  <span className='date'>HP : {hp}</span><br />
-                  <span className='date'>WEAK : {weak}%</span><br />
-                  <span className='date'>STR : {str}%</span><br />
-                  <span className='date'>damage : {damage}</span><br />
+                  <span className='date'>HP : 
+                   <Progress percent={hp} inverted progress color='orange' style={{ margin: 0 }} />
+                  </span><br />
+                  <span className='date'>WEAK : 
+                  <Progress percent={weak} inverted progress color='orange' style={{ margin: 0 }} />
+                  </span><br />
+                  <span className='date'>STR : 
+                   <Progress percent={weak} inverted progress color='orange' style={{ margin: 0 }} />
+                  </span><br />
                   <span className='date'>Happiness : {happy}</span><br/>
-                  <Image className='happy' src={cute}/>
+                  <br />
+                  <Image.Group size='tiny'>
+                    {this.showhappy(happy)}
+                  </Image.Group>
+                 
                   {/* {this.showhappy()} */}
                 </Card.Meta>
                 {/* <Card.Description></Card.Description> */}
