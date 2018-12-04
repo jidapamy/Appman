@@ -75,6 +75,7 @@ showhappy = (length) =>{
             let str = card.attacks ? card.attacks.length == 1 ? 50 : card.attacks.length == 2 ? 100 : 0 : 0
             let weak = card.weaknesses?card.weaknesses.length == 1 ? 100 : 0 :0
             let happy = parseInt(((hp / 10) + (damage / 10) + 10 - (card.weaknesses ? card.weaknesses.length : 0)) / 5)
+            // card = { ...card, ...{ hp: hp, weak: weak, str: str, happy: happy }}
             return <Card className="cardPoke"> 
               <Image src={card.imageUrl} />
               <Card.Content>
@@ -87,9 +88,9 @@ showhappy = (length) =>{
                   <Progress percent={weak} progress color='orange' style={{ margin: 0 }} />
                   </span><br />
                   <span className='date'>STR : 
-                   <Progress percent={weak} progress color='orange' style={{ margin: 0 }} />
+                   <Progress percent={str} progress color='orange' style={{ margin: 0 }} />
                   </span><br />
-                  <span className='date'>Happiness : {happy}</span><br/>
+                  <span className='date'>Happiness : </span><br/>
                   <br />
                   <Image.Group size='tiny'>
                     {this.showhappy(happy)}
@@ -102,7 +103,7 @@ showhappy = (length) =>{
               <Card.Content extra>
                 <Button fluid
                   onClick={() => {
-                    this.state.myCards.push(card)
+                    this.state.myCards.push({...{ card }, ...{ calculateValue: { hp, damage, str, weak, happy}} })
                     this.state.cards[i].hide = true
                     // arr.splice(i, 1)
                     // if (this.state.cards.indexOf(card) != -1){
@@ -128,20 +129,34 @@ showhappy = (length) =>{
     if (this.state.myCards.length > 0) {
       tmp = this.state.myCards.map((card, i) => {
         return <Card className="cardPoke">
-          <Image src={card.imageUrl} />
+          <Image src={card.card.imageUrl} />
           <Card.Content>
-            <Card.Header>{card.name}</Card.Header>
+            <Card.Header>{card.card.name}</Card.Header>
             <Card.Meta>
-              <span className='date'>HP : {card.hp}</span>
+              <span className='date'>HP :
+                   <Progress percent={card.calculateValue.hp} progress color='orange' style={{ margin: 0 }} />
+              </span><br />
+              <span className='date'>WEAK :
+                  <Progress percent={card.calculateValue.weak} progress color='orange' style={{ margin: 0 }} />
+              </span><br />
+              <span className='date'>STR :
+                   <Progress percent={card.calculateValue.weak} progress color='orange' style={{ margin: 0 }} />
+              </span><br />
+              <span className='date'>Happiness : </span><br />
+              <br />
+              <Image.Group size='tiny'>
+                {this.showhappy(card.calculateValue.happy)}
+              </Image.Group>
+
+              {/* {this.showhappy()} */}
             </Card.Meta>
-            <Card.Description>Matthew is a musician living in Nashville.</Card.Description>
+            {/* <Card.Description></Card.Description> */}
           </Card.Content>
           <Card.Content extra>
             <Button fluid
               onClick={() => {
                 this.state.myCards.splice(i, 1)
-                this.state.cards[this.state.cards.indexOf(card)].hide = false
-                // this.state.cards[i].hide = false
+                this.state.cards[this.state.cards.indexOf(card.card)].hide = false
                 // this.state.cards.push(card)
                 this.setState({ myCards: this.state.myCards, cards: this.state.cards })
               }}
@@ -178,7 +193,7 @@ showhappy = (length) =>{
 
 
   render() {
-    console.log("4/5", parseInt(5.2))
+    console.log(this.state)
     return (
       <div className="App">
         <div className="inBlock">
